@@ -1,0 +1,5 @@
+feast[redis]==0.24.0
+mlflow==1.29.0
+pandas==1.4.4
+scikit-learn==1.1.2
+xgboost

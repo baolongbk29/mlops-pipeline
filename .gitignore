@@ -200,3 +200,4 @@ mlruns
 
 /notebooks/models/*
 tools/mlflow/run_env/*
+tools/airflow/run_env/*
