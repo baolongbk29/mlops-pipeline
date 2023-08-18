@@ -33,8 +33,11 @@ def evaluation_model():
     
     
     # Write evaluation result to file
+    eval_result = EvaluationResult(acc_score, pre_score, rec_score, f_score, acc_score)
     dump_json(metrics, AppPath.EVALUATION_RESULT)
-    Log().log.info(f"eval result: {metrics}")
+    Log().log.info(f"eval result: {eval_result}")
+    eval_result.save()
+    inspect_dir(eval_result.path)
 
 if __name__ == "__main__":
     evaluation_model()

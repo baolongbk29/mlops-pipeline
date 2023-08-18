@@ -15,6 +15,7 @@ class AppConst:
     DATA_EXTRACTION = "data_extraction"
     MODEL_TRAINING = "model_training"
     MODEL_EVALUATION = "model_evaluation"
+    MODEL_VALIDATION = "model_validation"
     MLFLOW_MODEL_PATH_PREFIX = "model"
 
 
@@ -48,8 +49,11 @@ class Config:
         self.mlflow_tracking_uri = os.environ.get("MLFLOW_TRACKING_URI")
         self.alpha = float(os.environ.get("ALPHA"))
         self.l1_ratio = float(os.environ.get("L1_RATIO"))
-        self.rmse_threshold = float(os.environ.get("RMSE_THRESHOLD"))
-        self.mae_threshold = float(os.environ.get("MAE_THRESHOLD"))
+        self.acc_threshold = float(os.environ.get("ACC_THRESHOLD"))
+        self.pre_threshold = float(os.environ.get("PRE_THRESHOLD"))
+        self.recall_threshold = float(os.environ.get("RECALL_THRESHOLD"))
+        self.f1_threshold = float(os.environ.get("F1_THRESHOLD"))
+        self.auc_threshold = float(os.environ.get("AUC_THRESHOLD"))
         self.registered_model_name = os.environ.get("REGISTERED_MODEL_NAME")
 
 
@@ -72,18 +76,24 @@ class RunInfo:
 
 
 class EvaluationResult:
-    def __init__(self, rmse, mae) -> None:
+    def __init__(self, acc, pre, recall, f1, auc) -> None:
         self.path = AppPath.EVALUATION_RESULT
-        self.rmse = rmse
-        self.mae = mae
+        self.acc = acc
+        self.pre = pre
+        self.recall = recall
+        self.f1 = f1
+        self.auc = auc
 
     def __str__(self) -> str:
-        return f"RMSE: {self.rmse}, MAE: {self.mae}"
+        return f"ACC: {self.acc}, PRECISION: {self.pre}, RECALL: {self.recall}, F1-Score: {self.f1}, AUC: {self.auc}"
 
     def save(self):
         eval_result = {
-            "rmse": self.rmse,
-            "mae": self.mae,
+            'acc': self.acc,
+            'pre': self.pre,
+            'recall': self.recall,
+            'f1-score': self.f1,
+            'auc': self.auc
         }
         dump_json(eval_result, self.path)
 
@@ -91,8 +101,11 @@ class EvaluationResult:
     def load(path):
         data = load_json(path)
         eval_result = EvaluationResult(
-            data["rmse"],
-            data["mae"],
+            data["acc"],
+            data["pre"],
+            data["recall"],
+            data["f1-score"],
+            data["auc"],
         )
         return eval_result
 
